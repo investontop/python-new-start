@@ -47,6 +47,7 @@ import requests
 
 # :Get the list of Languages
 import requests
+from tinydb import TinyDB
 
 url = "https://text-translator2.p.rapidapi.com/getLanguages"
 
@@ -57,7 +58,19 @@ headers = {
 
 response = requests.get(url, headers=headers)
 
-print(response.json())
+# Check if the request was successful (status code 200)
+if response.status_code == 200:
+    # Extract the languages from the "data" key
+    languages = [{"language": lang['name'], "code": lang['code']} for lang in response.json()['data']['languages']]
+
+    # Store languages in TinyDB
+    db = TinyDB('TextConv.json')
+    language_table = db.table('Language')
+    language_table.insert_multiple(languages)
+
+    print("Languages stored in TextConv.json under the 'Language' table.")
+else:
+    print(f"Failed to fetch languages. Status code: {response.status_code}")
 
 #ToDO: Try to store the above languages in TinyDB and change the code to get input from users to enter the toLanguage and translate the content.
 #ToDO: Store the API key in a config file or TinyDB
