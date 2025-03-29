@@ -30,3 +30,4 @@ xml_tree = ET.ElementTree(root)
 xml_tree.write("output.xml", encoding="utf-8", xml_declaration=True)
 
 print("XML conversion complete. Output saved to {}\output.xml.".format(current_directory))
+print('')
